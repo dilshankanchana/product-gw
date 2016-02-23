@@ -46,9 +46,9 @@ import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
  */
 public class HttpResponseProcessor extends AbstractServerProcessor {
 
-    @Override
-    public void process(HttpServerProcessorContext processorContext) {
-        if (processorContext.getSelectedResponseContext() == null) {
+    @Override public void process(HttpServerProcessorContext processorContext) {
+        populateResponse(processorContext);
+        if (processorContext.getSelectedResponseContext() == null && processorContext.getSelectedDefaultResponseContext() == null) {
             populate404NotFoundResponse(processorContext);
         } else {
             populateResponse(processorContext);
@@ -56,8 +56,13 @@ public class HttpResponseProcessor extends AbstractServerProcessor {
     }
 
     private void populateResponse(HttpServerProcessorContext processorContext) {
+        HttpServerResponseBuilderContext responseContext;
+        if (processorContext.getSelectedResponseContext() == null) {
+            responseContext = processorContext.getSelectedDefaultResponseContext();
+        } else {
+            responseContext = processorContext.getSelectedResponseContext();
+        }
         HttpRequestContext requestContext = processorContext.getHttpRequestContext();
-        HttpServerResponseBuilderContext responseContext = processorContext.getSelectedResponseContext();
         boolean keepAlive = requestContext.isKeepAlive();
         Pattern pattern = processorContext.getServerInformationContext().getUtilityContext().getPattern();
         HttpResponseStatus httpResponseStatus = responseContext.getStatusCode();

@@ -32,7 +32,7 @@ public class HttpServerProcessorContext {
     private HttpRequestContext httpRequestContext;
     private HttpRequest httpRequest;
     private HttpContent httpContent;
-    private HttpServerResponseBuilderContext selectedResponseContext;
+    private HttpServerResponseBuilderContext selectedResponseContext, selectedDefaultResponseContext;
     private FullHttpResponse finalResponse;
     private HttpServerRequestBuilderContext requestBuilderContext;
 
@@ -80,8 +80,16 @@ public class HttpServerProcessorContext {
         return selectedResponseContext;
     }
 
+    public HttpServerResponseBuilderContext getSelectedDefaultResponseContext() {
+        return selectedDefaultResponseContext;
+    }
+
     public void setSelectedResponseContext(HttpServerResponseBuilderContext selectedResponseContext) {
         this.selectedResponseContext = selectedResponseContext;
+    }
+
+    public void setSelectedDefaultResponseContext(HttpServerResponseBuilderContext selectedResponseContext) {
+        this.selectedDefaultResponseContext = selectedResponseContext;
     }
 
     public FullHttpResponse getFinalResponse() {

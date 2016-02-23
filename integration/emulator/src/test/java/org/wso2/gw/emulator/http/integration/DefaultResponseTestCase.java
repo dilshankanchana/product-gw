@@ -22,6 +22,7 @@ package org.wso2.gw.emulator.http.integration;
 
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,9 +40,9 @@ import static org.wso2.gw.emulator.http.server.contexts.HttpServerRequestBuilder
 import static org.wso2.gw.emulator.http.server.contexts.HttpServerResponseBuilderContext.response;
 
 /**
- * BodyValidationTestCase
+ * DefaultResponseTestCase
  */
-public class BodyValidationTestCase {
+public class DefaultResponseTestCase {
 
     private HttpServerOperationBuilderContext emulator;
 
@@ -60,6 +61,15 @@ public class BodyValidationTestCase {
                 "Expected response status code not found");
     }
 
+    @Test public void testWithoutBodyWithPOSTMethodWithDefaultResponse() {
+        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
+                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user10").withMethod(HttpMethod.POST))
+                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
+
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
+    }
+
     @Test public void testBodyWithGETMethod() {
         HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
                 .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
@@ -70,6 +80,15 @@ public class BodyValidationTestCase {
                 "Expected response status code not found");
         Assert.assertEquals(response.getReceivedResponseContext().getResponseBody(), "User1",
                 "Expected response content not found");
+    }
+
+    @Test public void testBodyWithGETMethodWithDefaultResponse() {
+        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
+                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user11").withMethod(HttpMethod.GET))
+                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
+
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
     }
 
     @Test public void testBodyWithPOSTMethod() {
@@ -84,6 +103,15 @@ public class BodyValidationTestCase {
                 "Expected response content not found");
     }
 
+    @Test public void testBodyWithPOSTMethodWithDefaultResponse() {
+        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
+                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user12").withMethod(HttpMethod.POST))
+                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
+
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
+    }
+
     @Test public void testBodyWithPUTMethod() {
         HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
                 .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
@@ -94,6 +122,15 @@ public class BodyValidationTestCase {
                 "Expected response status code not found");
         Assert.assertEquals(response.getReceivedResponseContext().getResponseBody(), "User3",
                 "Expected response content not found");
+    }
+
+    @Test public void testBodyWithPUTMethodWithDefaultResponse() {
+        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
+                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user13").withMethod(HttpMethod.PUT))
+                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
+
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
     }
 
     @Test public void testBodyWithHeadersPOSTMethod() {
@@ -109,17 +146,14 @@ public class BodyValidationTestCase {
                 "Expected response content not found");
     }
 
-    @Test public void testBodyWithHeadersBodyPOSTMethod() {
+    @Test public void testBodyWithHeadersPOSTMethodWithDefaultResponse() {
         HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
                 .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
-                .when(HttpClientRequestBuilderContext.request().withPath("/users/user5").withMethod(HttpMethod.POST)
-                        .withHeader("Header5", "value5").withBody("User5"))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user14").withMethod(HttpMethod.POST)
+                        .withHeader("Header4", "value4"))
                 .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
 
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseStatus(), HttpResponseStatus.OK,
-                "Expected response status code not found");
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseBody(), "User5",
-                "Expected response content not found");
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
     }
 
     @Test public void testBodyWithHeadersBodyQueryPOSTMethod() {
@@ -136,6 +170,16 @@ public class BodyValidationTestCase {
 
     }
 
+    @Test public void testBodyWithHeadersBodyQueryPOSTMethodWithDefaultResponse() {
+        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
+                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user15").withMethod(HttpMethod.POST)
+                        .withHeader("Header6", "value6").withBody("User6").withQueryParameter("Query6", "value6"))
+                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
+
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
+    }
+
     @Test public void testBodyWithHeadersBackInResponse() {
         HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
                 .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
@@ -149,31 +193,14 @@ public class BodyValidationTestCase {
                 "Expected response content not found");
     }
 
-    @Test public void testBodyWithRequestBodyHeadersBackInResponse() {
+    @Test public void testBodyWithHeadersBackInResponseWithDefaultResponse() {
         HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
                 .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
-                .when(HttpClientRequestBuilderContext.request().withPath("/users/user8").withMethod(HttpMethod.POST)
-                        .withBody("User8").withHeader("Header8", "value8"))
+                .when(HttpClientRequestBuilderContext.request().withPath("/users/user16").withMethod(HttpMethod.POST)
+                        .withHeader("Header7", "value7"))
                 .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
 
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseStatus(), HttpResponseStatus.OK,
-                "Expected response status code not found");
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseBody(), "User8 value8",
-                "Expected response content not found");
-    }
-
-    @Test public void testBodyWithRequestBodyHeadersQueryParametersBackInResponse() {
-        HttpClientResponseProcessorContext response = Emulator.getHttpEmulator().client()
-                .given(HttpClientConfigBuilderContext.configure().host("127.0.0.1").port(6065))
-                .when(HttpClientRequestBuilderContext.request().withPath("/users/user9").withMethod(HttpMethod.POST)
-                        .withBody("User9").withHeader("Header9", "headerValue9")
-                        .withQueryParameter("Query9", "queryValue9"))
-                .then(HttpClientResponseBuilderContext.response().assertionIgnore()).operation().send();
-
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseStatus(), HttpResponseStatus.OK,
-                "Expected response status code not found");
-        Assert.assertEquals(response.getReceivedResponseContext().getResponseBody(), "User9 headerValue9 queryValue9",
-                "Expected response content not found");
+        Logger.getLogger(DefaultResponseTestCase.class).info(response.getReceivedResponseContext().getResponseBody());
     }
 
     @AfterClass public void cleanup() {
@@ -202,11 +229,6 @@ public class BodyValidationTestCase {
                 .then(response().withBody("User4").withStatusCode(HttpResponseStatus.OK)
                         .withHeader("Header-res4", "value4"))
 
-                .when(request().withMethod(HttpMethod.POST).withPath("/user5").withBody("User5")
-                        .withHeader("Header5", "value5"))
-                .then(response().withBody("User5").withStatusCode(HttpResponseStatus.OK)
-                        .withHeader("Header-res5", "value5"))
-
                 .when(request().withMethod(HttpMethod.POST).withPath("/user6").withBody("User6")
                         .withHeader("Header6", "value6").
                                 withQueryParameter("Query6", "value6"))
@@ -217,14 +239,6 @@ public class BodyValidationTestCase {
                 .then(response().withBody("@{header.Header7}").withStatusCode(HttpResponseStatus.OK)
                         .withHeader("Header-res7", "value7"))
 
-                .when(request().withMethod(HttpMethod.POST).withPath("/user8").withBody("User8")
-                        .withHeader("Header8", "value8"))
-                .then(response().withBody("@{body} @{header.Header8}").withStatusCode(HttpResponseStatus.OK)
-                        .withHeader("Header-res8", "value8"))
-
-                .when(request().withMethod(HttpMethod.POST).withPath("/user9").withBody("User9")
-                        .withHeader("Header9", "headerValue9").withQueryParameter("Query9", "queryValue9"))
-                .then(response().withBody("@{body} @{header.Header9} @{query.Query9}")
-                        .withStatusCode(HttpResponseStatus.OK).withHeader("Header-res9", "value9")).operation().start();
+                .otherwise(response().withBody("default response")).operation().start();
     }
 }

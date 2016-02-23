@@ -25,6 +25,7 @@ import org.wso2.gw.emulator.http.server.contexts.HttpServerProcessorContext;
 import org.wso2.gw.emulator.http.server.contexts.HttpServerRequestBuilderContext;
 import org.wso2.gw.emulator.http.server.contexts.HttpServerResponseBuilderContext;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,18 +33,23 @@ import java.util.Map;
  */
 public class HttpRequestResponseMatchingProcessor extends AbstractServerProcessor {
 
-    @Override
-    public void process(HttpServerProcessorContext processorContext) {
-        Map<HttpServerRequestBuilderContext, HttpServerResponseBuilderContext> requestResponseCorrelation =
-                processorContext.getServerInformationContext().getRequestResponseCorrelation();
+    @Override public void process(HttpServerProcessorContext processorContext) {
+        Map<HttpServerRequestBuilderContext, HttpServerResponseBuilderContext>
+                requestResponseCorrelation = processorContext
+                .getServerInformationContext().getRequestResponseCorrelation();
+        List<HttpServerResponseBuilderContext> defaultCorrelation = processorContext
+                .getServerInformationContext().getDefaultCorrelation();
 
         HttpRequestContext httpRequestContext = processorContext.getHttpRequestContext();
-        for (Map.Entry<HttpServerRequestBuilderContext,
-                HttpServerResponseBuilderContext> entry : requestResponseCorrelation.entrySet()) {
+        for (Map.Entry<HttpServerRequestBuilderContext, HttpServerResponseBuilderContext>
+                entry : requestResponseCorrelation
+                .entrySet()) {
             if (entry.getKey().isMatch(httpRequestContext)) {
                 processorContext.setSelectedResponseContext(entry.getValue());
                 break;
             }
         }
+        if (defaultCorrelation != null)
+            processorContext.setSelectedDefaultResponseContext(defaultCorrelation.get(0));
     }
 }

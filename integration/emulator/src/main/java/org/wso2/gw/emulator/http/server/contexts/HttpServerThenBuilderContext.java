@@ -40,8 +40,7 @@ public class HttpServerThenBuilderContext extends AbstractThenBuilderContext<Htt
         this.whenBuilderContextList = whenBuilderContextList;
     }
 
-    @Override
-    public HttpServerWhenBuilderContext then(HttpServerResponseBuilderContext responseContext) {
+    @Override public HttpServerWhenBuilderContext then(HttpServerResponseBuilderContext responseContext) {
         whenBuilderContext = new HttpServerWhenBuilderContext(whenBuilderContextList, httpServerInformationContext);
         this.httpServerInformationContext.addCorrelation(requestContext, responseContext);
         return whenBuilderContext;

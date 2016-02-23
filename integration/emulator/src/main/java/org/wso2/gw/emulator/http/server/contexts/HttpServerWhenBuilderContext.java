@@ -41,8 +41,7 @@ public class HttpServerWhenBuilderContext extends AbstractWhenBuilderContext<Htt
         this.whenBuilderContextList.add(this);
     }
 
-    @Override
-    public HttpServerThenBuilderContext when(HttpServerRequestBuilderContext requestContext) {
+    @Override public HttpServerThenBuilderContext when(HttpServerRequestBuilderContext requestContext) {
         this.requestContext = requestContext;
         this.requestContext.buildPathRegex(httpServerInformationContext.getServerConfigBuilderContext().getContext());
         thenBuilderContext = new HttpServerThenBuilderContext(whenBuilderContextList, requestContext,
@@ -50,10 +49,15 @@ public class HttpServerWhenBuilderContext extends AbstractWhenBuilderContext<Htt
         return thenBuilderContext;
     }
 
-    @Override
-    public HttpServerOperationBuilderContext operation() {
+    @Override public HttpServerOperationBuilderContext operation() {
         this.httpServerOperationBuilderContext = new HttpServerOperationBuilderContext(httpServerInformationContext);
         return httpServerOperationBuilderContext;
+    }
+
+    public HttpServerWhenBuilderContext otherwise(HttpServerResponseBuilderContext defaultResponseContext) {
+        //whenBuilderContext = new HttpServerWhenBuilderContext(whenBuilderContextList, httpServerInformationContext);
+        this.httpServerInformationContext.addDefaultCorrelation(requestContext, defaultResponseContext);
+        return this;
     }
 
     public HttpServerRequestBuilderContext getRequestContext() {

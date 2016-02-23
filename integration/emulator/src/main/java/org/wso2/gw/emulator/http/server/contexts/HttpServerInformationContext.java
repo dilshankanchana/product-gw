@@ -22,7 +22,9 @@ package org.wso2.gw.emulator.http.server.contexts;
 
 import org.wso2.gw.emulator.http.server.HttpServerInitializer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +33,7 @@ import java.util.Map;
 public class HttpServerInformationContext {
     private HttpServerConfigBuilderContext serverConfigBuilderContext;
     private Map<HttpServerRequestBuilderContext, HttpServerResponseBuilderContext> correlation;
+    private List<HttpServerResponseBuilderContext> defaultCorrelation;
     private HttpServerInitializer httpServerInitializer;
 
     public UtilityContext getUtilityContext() {
@@ -49,12 +52,24 @@ public class HttpServerInformationContext {
         return correlation;
     }
 
+    public List<HttpServerResponseBuilderContext> getDefaultCorrelation() {
+        return defaultCorrelation;
+    }
+
     public void addCorrelation(HttpServerRequestBuilderContext httpServerRequestBuilderContext,
             HttpServerResponseBuilderContext httpServerResponseBuilderContext) {
         if (correlation == null) {
             this.correlation = new HashMap<HttpServerRequestBuilderContext, HttpServerResponseBuilderContext>();
         }
         correlation.put(httpServerRequestBuilderContext, httpServerResponseBuilderContext);
+    }
+
+    public void addDefaultCorrelation(HttpServerRequestBuilderContext httpServerRequestBuilderContext,
+            HttpServerResponseBuilderContext httpServerDefaultResponseBuilderContext) {
+        if (defaultCorrelation == null) {
+            defaultCorrelation = new ArrayList<HttpServerResponseBuilderContext>();
+        }
+        defaultCorrelation.add(httpServerDefaultResponseBuilderContext);
     }
 
     public HttpServerInitializer getHttpServerInitializer() {
