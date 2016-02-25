@@ -29,6 +29,7 @@ public class HttpClientResponseProcessorContext extends HttpClientProcessorConte
     private HttpClientResponseBuilderContext expectedResponse;
     private HttpResponseContext receivedResponseContext;
     private HttpResponse receivedResponse;
+    private boolean ResponseStatus;
 
     public HttpClientResponseBuilderContext getExpectedResponseContext() {
         return expectedResponse;
@@ -52,6 +53,14 @@ public class HttpClientResponseProcessorContext extends HttpClientProcessorConte
 
     public void setReceivedResponse(HttpResponse receivedResponse) {
         this.receivedResponse = receivedResponse;
+    }
+
+    public boolean isResponseStatus() {
+        return ResponseStatus;
+    }
+
+    public void setResponseStatus(boolean responseStatus) {
+        ResponseStatus = responseStatus;
     }
 
 }

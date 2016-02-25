@@ -25,5 +25,6 @@ package org.wso2.gw.emulator.dsl.contexts;
  */
 public abstract class AbstractClientOperationBuilderContext extends AbstractOperationBuilderContext {
 
-    public abstract AbstractClientProcessorContext send();
+//    public abstract AbstractClientProcessorContext send();
+        public abstract <T> T send();
 }

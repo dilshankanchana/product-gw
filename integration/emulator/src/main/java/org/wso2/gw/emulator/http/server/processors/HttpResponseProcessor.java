@@ -47,7 +47,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
 public class HttpResponseProcessor extends AbstractServerProcessor {
 
     @Override public void process(HttpServerProcessorContext processorContext) {
-        populateResponse(processorContext);
+        //populateResponse(processorContext);
         if (processorContext.getSelectedResponseContext() == null && processorContext.getSelectedDefaultResponseContext() == null) {
             populate404NotFoundResponse(processorContext);
         } else {

@@ -34,13 +34,26 @@ public class HttpClientOperationBuilderContext extends AbstractClientOperationBu
         this.httpClientInformationContext = httpClientInformationContext;
     }
 
-    @Override
-    public HttpClientResponseProcessorContext send() {  //recommanded for a one request only
+    /*@Override public HttpClientResponseProcessorContext send() {  //recommended for a one request only
         try {
             this.httpClientInformationContext.getClientInitializer().initialize();
         } catch (Exception e) {
             log.error("Exception occurred while sending message" + e);
         }
         return httpClientInformationContext.getReceivedResponseProcessContext();
+    }*/
+
+    @Override public <T> T send() {  //recommended for a one request only
+        try {
+            this.httpClientInformationContext.getClientInitializer().initialize();
+        } catch (Exception e) {
+            log.error("Exception occurred while sending message" + e);
+        }
+        if (!httpClientInformationContext.getExpectedResponse().getAssertionStatus()) {
+            return ((T) ((Boolean) httpClientInformationContext.getReceivedResponseProcessContext()
+                    .isResponseStatus()));
+        } else
+            return ((T) ((HttpClientResponseProcessorContext) httpClientInformationContext
+                    .getReceivedResponseProcessContext()));
     }
 }

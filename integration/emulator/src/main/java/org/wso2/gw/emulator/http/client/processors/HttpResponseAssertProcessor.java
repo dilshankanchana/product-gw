@@ -34,30 +34,34 @@ import java.util.Map;
 public class HttpResponseAssertProcessor extends AbstractClientProcessor<HttpClientResponseProcessorContext> {
 
     private static final Logger log = Logger.getLogger(HttpResponseAssertProcessor.class);
+    private boolean assertResponseContentStatus, assertHeaderParametersStatus;
 
-    @Override
-    public void process(HttpClientResponseProcessorContext processorContext) {
-
+    @Override public void process(HttpClientResponseProcessorContext processorContext) {
         if (!processorContext.getExpectedResponseContext().getAssertionStatus()) {
-            assertResponseContent(processorContext);
-            assertHeaderParameters(processorContext);
+            assertResponseContentStatus = assertResponseContent(processorContext);
+            assertHeaderParametersStatus = assertHeaderParameters(processorContext);
+            processorContext.setResponseStatus(assertResponseContentStatus && assertHeaderParametersStatus);
+        } else {
+
         }
     }
 
-    private void assertResponseContent(HttpClientResponseProcessorContext processorContext) {
+    private boolean assertResponseContent(HttpClientResponseProcessorContext processorContext) {
 
         if (processorContext.getExpectedResponseContext().getBody()
                 .equalsIgnoreCase(processorContext.getReceivedResponseContext().getResponseBody())) {
             log.info("Equal content");
+            return true;
         } else {
             log.info("Wrong content");
+            return false;
         }
     }
 
-    private void assertHeaderParameters(HttpClientResponseProcessorContext processorContext) {
+    private boolean assertHeaderParameters(HttpClientResponseProcessorContext processorContext) {
         if (processorContext.getExpectedResponseContext().getHeaders() == null || processorContext
                 .getExpectedResponseContext().getHeaders().isEmpty()) {
-            return;
+            return false;
         }
         Map<String, List<String>> receivedHeaders = processorContext.getReceivedResponseContext().getHeaderParameters();
         HeaderOperation operation = processorContext.getClientInformationContext().getExpectedResponse()
@@ -77,9 +81,11 @@ public class HttpResponseAssertProcessor extends AbstractClientProcessor<HttpCli
                 if (receivedHeaderValues == null || receivedHeaderValues.isEmpty() || !receivedHeaderValues
                         .contains(header.getValue())) {
                     log.info("Header not present");
-                    break;
+                    return false;
+                    //break;
                 } else {
                     log.info("Headers are present");
+                    return true;
                 }
             }
         } else if (operation == operation.OR) {
@@ -95,8 +101,10 @@ public class HttpResponseAssertProcessor extends AbstractClientProcessor<HttpCli
             }
             if (value) {
                 log.info("Headers are present");
+                return true;
             } else {
                 log.info("Non of the Headers present");
+                return false;
             }
         } else {
             boolean match = false;
@@ -114,9 +122,12 @@ public class HttpResponseAssertProcessor extends AbstractClientProcessor<HttpCli
             }
             if (match) {
                 log.info("Header Present");
+                return true;
             } else {
                 log.info("Header is not present");
+                return false;
             }
         }
+        return false;
     }
 }

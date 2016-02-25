@@ -43,7 +43,7 @@ public class HttpClientResponseBuilderContext extends AbstractResponseBuilderCon
     private List<Header> headers;
     private List<Cookie> cookies;
     private String body;
-    private boolean isIgnored;
+    private boolean isIgnored = false;
     private HeaderOperation operations;
 
     private static final Logger log = Logger.getLogger(HttpClientResponseBuilderContext.class);
